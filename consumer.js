@@ -10,7 +10,7 @@ const kafka = new Kafka({
 
 
 const run = async () => {
-  Consuming
+  //Consuming
   await consumer.connect()
   await consumer.subscribe({topic})
 

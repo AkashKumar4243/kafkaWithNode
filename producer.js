@@ -17,6 +17,7 @@ const producer = kafka.producer({
 
 const producerMessages = async () => {
     const value = chance.animal();
+    console.log(value)
     try {
         await producer.send({
             topic,
