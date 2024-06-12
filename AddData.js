@@ -1,21 +1,38 @@
-const addData = () => {
-    const demoData = [
-        ['Product 1', 'Charger A', 20.99],
-        ['Product 2', 'Charger B', 15.99],
-        ['Product 3', 'Charger C', 25.99]
-      ];
+import generateRandomData from "./generateDemoData.js";
+import mysql from "mysql"
 
-      const insertQuery = 'INSERT INTO products (name, chargername, chargerprice) VALUES ?';
+const data = generateRandomData();
 
-     connection.query(insertQuery, [demoData], (err, result) => {
+console.log(data)
+
+// Create a connection to MySQL
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'myNewDatabase'
+});
+
+// Connect to MySQL
+connection.connect((err) => {
     if (err) {
-      console.error('Error inserting demo data:', err.stack);
-      return;
+        console.error('Error connecting to MySQL: ' + err.stack);
+        return;
     }
+    console.log('Connected to MySQL as id ' + connection.threadId);
+});
 
-    console.log('Demo data inserted successfully:', result);
-     }
-    )
+// Function to insert data into MySQL
+function insertDataIntoMySQL() {
+    const sql = 'INSERT INTO products (name,chargername,chargerprice) VALUES ?';
+
+    connection.query(sql, [data.map(obj => [obj.name, obj.chargerName, obj.price])], (err, result) => {
+        if (err) {
+            console.error('Error inserting data: ' + err.stack);
+            return;
+        }
+        console.log('Data inserted successfully.');
+    });
 }
 
-export default addData;
+// Call insertDataIntoMySQL() every 2 seconds
+insertDataIntoMySQL();
