@@ -1,11 +1,11 @@
-const { Kafka} = require('kafkajs')
+import { Kafka } from "kafkajs"
 
 const kafka = new Kafka({
   clientId: 'my-consumer',
   brokers: ['localhost:9092']
 })
 
-  const topic = 'animals'
+  const topic = 'charger'
   const consumer = kafka.consumer({ groupId: 'test-group' })
 
 
@@ -16,11 +16,13 @@ const run = async () => {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      console.log({
-        partition,
-        offset: message.offset,
-        value: message.value.toString(),
-      })
+      // console.log({
+      //   partition,
+      //   offset: message.offset,
+      //   value: message.value.toString(),
+      // })
+      const responsedata = message.value.toString();
+      console.log(responsedata)
     },
   })
 }
