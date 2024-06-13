@@ -8,16 +8,16 @@ function generateRandomData() {
             String.fromCharCode(Math.floor(Math.random() * 26) + 97) // Random lowercase letter
         ).join('');
         
-        const chargerName = Array.from({ length: chargerNameLength }, () => 
+        const chargername = Array.from({ length: chargerNameLength }, () => 
             String.fromCharCode(Math.floor(Math.random() * 26) + 97) // Random lowercase letter
         ).join('');
 
-        const price = (Math.random() * (10.0 - 10.0) + 10.0).toFixed(2); // Random price between 10.0 and 1000.0
+        const chargerprice	 = (Math.random() * (10.0 - 10.0) + 10.0).toFixed(2); // Random price between 10.0 and 1000.0
         
         objects.push({
             name: name,
-            chargerName: chargerName,
-            price: parseFloat(price)
+            chargername: chargername,
+            chargerprice: parseFloat(chargerprice)
         });
     }
     return objects;

@@ -1,4 +1,5 @@
 import { Kafka } from "kafkajs"
+import dbConnection from "./mySqlDBconnection.js"
 
 const kafka = new Kafka({
   clientId: 'my-consumer',
@@ -11,6 +12,7 @@ const kafka = new Kafka({
 
 const run = async () => {
   //Consuming
+  const connection = dbConnection();
   await consumer.connect()
   await consumer.subscribe({topic})
 
@@ -22,9 +24,24 @@ const run = async () => {
       //   value: message.value.toString(),
       // })
       const responsedata = message.value.toString();
-      console.log(responsedata)
+      // console.log(responsedata)
+      await insertData(responsedata)
     },
   })
+
+  const insertData = async (responsedata) => {
+    responsedata.forEach((item) => {
+        const { name, chargerName, price } = item;
+        const query = 'INSERT INTO products (name, chargerName, price) VALUES (?, ?, ?)';
+        connection.query(query, [name, chargerName, price], (err, results) => {
+            if (err) {
+                console.error('Error inserting data:', err);
+                return;
+            }
+            console.log('Data inserted successfully:', results.insertId);
+        });
+    });
+};
 }
 
 run().catch(console.error)

@@ -38,6 +38,8 @@ const producerMessages = async (buffer) => {
       ]
     });
     console.log(`Sent message: ${JSON.stringify(buffer)}`);
+    console.log(buffer)
+    buffer = [];
   } catch (error) {
     console.error('Error sending message:', error);
   }
