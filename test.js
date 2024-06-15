@@ -1,7 +1,10 @@
 import { Kafka, Partitioners } from 'kafkajs';
-import generateRandomData from './generateDemoData.js';
-import generateRandomData2 from './generateDemoData2.js';
-import generateRandomData1 from './generateDemoData1.js';
+import generateRandomData from './dataGeneration/generateDemoData.js';
+import generateRandomData1 from './dataGeneration/generateDemoData1.js';
+import generateRandomData2 from './dataGeneration/generateDemoData2.js';
+import generateRandomData3 from './dataGeneration/generateDemoData3.js';
+import generateRandomData4 from './dataGeneration/generateDemoData4.js';
+import generateRandomData5 from './dataGeneration/generateDemoData5.js';
 
 // Create a Kafka client and producer
 const kafka = new Kafka({
@@ -15,10 +18,8 @@ const producer = kafka.producer({
 
 const topic = 'charger';
 
-// Buffer to store data for 10 seconds
-let buffer = [];
-let buffer1 = [];
-let buffer2 = [];
+// Buffers to store data
+let buffers = Array.from({ length: 6 }, () => []);
 
 // Function to produce messages
 const produceMessages = async (data) => {
@@ -35,64 +36,44 @@ const produceMessages = async (data) => {
         }
       ]
     });
-    console.log(`Sent message: ${JSON.stringify(data)}`);
+    console.log("added")
+    // console.log(`Sent message: ${JSON.stringify(data)}`);
   } catch (error) {
     console.error('Error sending message:', error);
   }
+
+  // Clear the buffers after sending
+  buffers = Array.from({ length: 6 }, () => []);
 };
 
-// Function to simulate continuous data generation
-function continuousDataSending() {
-  const data = generateRandomData();
-  const data1 = generateRandomData1();
-  const data2 = generateRandomData2();
+// Function to generate random data and add it to the buffers
+const continuousDataSending = (generateData, index) => {
+  const data = generateData();
+  console.log(data);
+  buffers[index].push(...data);
+  console.log("Data added successfully to buffer", index);
+};
 
-  console.log('Generated Data:', data, data1, data2);
-  buffer.push(...data);
-  buffer1.push(...data1);
-  buffer2.push(...data2);
-}
-
-// Function to handle the accumulation and sending of data every 10 seconds
-function handleTenSecondInterval() {
-  const tenSecondData = [...buffer, ...buffer1, ...buffer2];
+// Function to handle the accumulation and storage of data every 10 seconds
+const handleTenSecondInterval = () => {
+  const tenSecondData = buffers.flat();
   produceMessages(tenSecondData);
-
-  // Clear buffers after sending
-  buffer = [];
-  buffer1 = [];
-  buffer2 = [];
-}
-
-// Function to run continuous data generation with delays
-function runContinuousDataSendingWithDelay() {
-  let counter = 0;
-
-  const runWithDelay = () => {
-    if (counter < 10) {
-      continuousDataSending();
-      counter++;
-      setTimeout(runWithDelay, 1000); // Call again in 1 second
-    } else {
-      console.log('Pausing for 2 seconds...');
-      setTimeout(() => {
-        counter = 0;
-        runWithDelay(); // Restart the cycle after 2 seconds
-      }, 2000);
-    }
-  };
-
-  runWithDelay(); // Start the cycle
-}
+};
 
 // Function to run the producer
 const run = async () => {
-  await producer.connect();
+  await producer.connect(); // Ensure the producer is connected
 
-  runContinuousDataSendingWithDelay();
+  // Set intervals for each data generation function
+  setInterval(() => continuousDataSending(generateRandomData, 0), 1000);
+  setInterval(() => continuousDataSending(generateRandomData1, 1), 2000);
+  setInterval(() => continuousDataSending(generateRandomData2, 2), 3000);
+  setInterval(() => continuousDataSending(generateRandomData3, 3), 4000);
+  setInterval(() => continuousDataSending(generateRandomData4, 4), 5000);
+  setInterval(() => continuousDataSending(generateRandomData5, 5), 6000);
 
-  // Handle the data accumulation and storage every 12 seconds
-  setInterval(handleTenSecondInterval, 11000);
+  // Send accumulated data every 10 seconds
+  setInterval(handleTenSecondInterval, 10000);
 };
 
 // Run the producer

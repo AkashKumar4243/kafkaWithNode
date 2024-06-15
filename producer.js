@@ -1,7 +1,10 @@
 import { Kafka, Partitioners } from 'kafkajs';
-import generateRandomData from './generateDemoData.js';
-import generateRandomData2 from './generateDemoData2.js';
-import generateRandomData1 from './generateDemoData1.js';
+import generateRandomData from './dataGeneration/generateDemoData.js';
+import generateRandomData2 from './dataGeneration/generateDemoData1.js';
+import generateRandomData1 from './dataGeneration/generateDemoData2.js';
+import generateRandomData4 from './dataGeneration/generateDemoData4.js';
+import generateRandomData5 from './dataGeneration/generateDemoData5.js';
+import generateRandomData3 from './dataGeneration/generateDemoData3.js';
 
 // Create a Kafka client and producer
 const kafka = new Kafka({
@@ -19,6 +22,9 @@ const topic = 'charger';
 let buffer = [];
 let buffer1 = [];
 let buffer2 = [];
+let buffer3 = [];
+let buffer4 = [];
+let buffer5 = [];
 
 // Variable to store accumulated data for 10 seconds
 let tenSecondData = [];
@@ -46,6 +52,9 @@ const producerMessages = async (tenSecondData) => {
     buffer = [];
     buffer1 = [];
     buffer2 = [];
+    buffer3 = [];
+    buffer4 = [];
+    buffer5 = [];
     tenSecondData = [];
   } catch (error) {
     console.error('Error sending message:', error);
@@ -53,30 +62,45 @@ const producerMessages = async (tenSecondData) => {
 
   // Clear the buffer after sending
   buffer = [];
+  buffer1 = [];
+  buffer2 = [];
+  buffer3 = [];
+  buffer4 = [];
+  buffer5 = [];
+  tenSecondData = [];
 
 };
 
 
 function continuousDataSending() {
-  const data = generateRandomData();
+  const data  = generateRandomData();
   const data1 = generateRandomData1();
   const data2 = generateRandomData2();
+  const data3 = generateRandomData3();
+  const data4 = generateRandomData4();
+  const data5 = generateRandomData5();
 
   console.log(data);
   console.log(data1);
   console.log(data2);
+  console.log(data3);
+  console.log(data4);
+  console.log(data5);
   console.log("data added succesfully")
   // Add data to buffer
 
   buffer.push(...data);
   buffer1.push(...data1);
   buffer2.push(...data2);
+  buffer2.push(...data3);
+  buffer2.push(...data4);
+  buffer2.push(...data5);
 }
 
 // Function to handle the accumulation and storage of data every 10 seconds
 function handleTenSecondInterval() {
   // Store the current buffer in the tenSecondData variable
-  tenSecondData = [...buffer, ...buffer1, ...buffer2];
+  tenSecondData = [...buffer, ...buffer1, ...buffer2, ...buffer3, ...buffer4, ...buffer5];
 
   // Optionally, send the buffered data to Kafka
   producerMessages (tenSecondData);
