@@ -1,6 +1,6 @@
 function generateRandomData9() {
     const objects = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
         const nameLength = Math.floor(Math.random() * 6) + 5; // Random length between 5 and 10
         const chargerNameLength = Math.floor(Math.random() * 6) + 5; // Random length between 5 and 10
         

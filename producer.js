@@ -67,8 +67,9 @@ const continuousDataSending = (generateData, index) => {
   console.log(`Data added successfully to buffer ${index}`);
 };
 
-// Function to handle the accumulation and storage of data every 10 seconds
-const handleTenSecondInterval = () => {
+// Function to handle the accumulation and storage of data
+const handleSixtySecondInterval = () => {
+  console.log(buffers)
   const tenSecondData = buffers.flat();
   produceMessages(tenSecondData);
 };
@@ -78,29 +79,29 @@ const run = async () => {
   await producer.connect(); // Ensure the producer is connected
 
   // Set intervals for each data generation function
-  setInterval(() => continuousDataSending(generateRandomData, 0), 1000);
+  setInterval(() => continuousDataSending(generateRandomData, 0),  2000);
   setInterval(() => continuousDataSending(generateRandomData1, 1), 2000);
   setInterval(() => continuousDataSending(generateRandomData2, 2), 3000);
-  setInterval(() => continuousDataSending(generateRandomData3, 3), 4000);
-  setInterval(() => continuousDataSending(generateRandomData4, 4), 5000);
-  setInterval(() => continuousDataSending(generateRandomData5, 5), 6000);
-  setInterval(() => continuousDataSending(generateRandomData6, 6), 7000);
-  setInterval(() => continuousDataSending(generateRandomData7, 7), 8000);
-  setInterval(() => continuousDataSending(generateRandomData8, 8), 9000);
-  setInterval(() => continuousDataSending(generateRandomData9, 9), 10000);
-  setInterval(() => continuousDataSending(generateRandomData10, 10), 11000);
-  setInterval(() => continuousDataSending(generateRandomData11, 11), 12000);
-  setInterval(() => continuousDataSending(generateRandomData12, 12), 13000);
-  setInterval(() => continuousDataSending(generateRandomData13, 13), 14000);
-  setInterval(() => continuousDataSending(generateRandomData14, 14), 15000);
-  setInterval(() => continuousDataSending(generateRandomData15, 15), 16000);
-  setInterval(() => continuousDataSending(generateRandomData16, 16), 17000);
-  setInterval(() => continuousDataSending(generateRandomData17, 17), 18000);
-  setInterval(() => continuousDataSending(generateRandomData18, 18), 19000);
-  setInterval(() => continuousDataSending(generateRandomData19, 19), 20000);
+  setInterval(() => continuousDataSending(generateRandomData3, 3), 3000);
+  setInterval(() => continuousDataSending(generateRandomData4, 4), 3000);
+  setInterval(() => continuousDataSending(generateRandomData5, 5), 3000);
+  setInterval(() => continuousDataSending(generateRandomData6, 6), 4000);
+  setInterval(() => continuousDataSending(generateRandomData7, 7), 4000);
+  setInterval(() => continuousDataSending(generateRandomData8, 8), 4000);
+  setInterval(() => continuousDataSending(generateRandomData9, 9), 4000);
+  setInterval(() => continuousDataSending(generateRandomData10, 10), 5000);
+  setInterval(() => continuousDataSending(generateRandomData11, 11), 5000);
+  setInterval(() => continuousDataSending(generateRandomData12, 12), 5000);
+  setInterval(() => continuousDataSending(generateRandomData13, 13), 5000);
+  setInterval(() => continuousDataSending(generateRandomData14, 14), 6000);
+  setInterval(() => continuousDataSending(generateRandomData15, 15), 6000);
+  setInterval(() => continuousDataSending(generateRandomData16, 16), 6000);
+  setInterval(() => continuousDataSending(generateRandomData17, 17), 6000);
+  setInterval(() => continuousDataSending(generateRandomData18, 18), 6000);
+  setInterval(() => continuousDataSending(generateRandomData19, 19), 6000);
 
-  // Send accumulated data every 10 seconds
-  setInterval(handleTenSecondInterval, 20000);
+  // Send accumulated data 
+  setInterval(handleSixtySecondInterval, 7000);
 };
 
 // Run the producer
