@@ -1,10 +1,13 @@
 
-import { Kafka } from 'kafkajs';
+import { Kafka , Partitioners} from 'kafkajs';
 
 // Example charger statuses
 const chargers = {
   'charger1': 'off',
-  'charger2': 'off'
+  'charger2': 'off',
+  'charger3': 'off',
+  'charger4': 'off',
+  'charger5': 'off'
 };
 
 // Kafka setup
@@ -12,7 +15,6 @@ const kafka = new Kafka({
   clientId: 'ev-charger-monitor',
   brokers: ['localhost:9092']
 });
-
 
 const producers = {}; // To store active producers
 
@@ -41,7 +43,9 @@ const checkChargerStatus = (chargerId) => {
 
 // Function to start Kafka producer for charger
 const startKafkaProducer = async (chargerId) => {
-//   const producer = kafka.producer();
+    const producer = kafka.producer({
+        createPartitioner: Partitioners.LegacyPartitioner
+      });
   await producer.connect();
   console.log(`Kafka producer for ${chargerId} is ready`);
   
@@ -75,7 +79,7 @@ const sendKafkaMessage = async (chargerId, producer) => {
     messages: [{ value: JSON.stringify(message) }]
   });
 
-  console.log(`Message sent successfully for ${chargerId}`);
+  console.log(`Message sent successfully for ${chargerId} ${JSON.stringify(message)}`);
 };
 
 // Start monitoring chargers

@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "chance": "^1.1.11",
+    "kafka-node": "^5.0.0",
     "kafkajs": "^2.2.4",
     "mysql": "^2.18.1",
     "mysql2": "^3.10.0"
