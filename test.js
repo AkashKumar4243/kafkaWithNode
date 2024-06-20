@@ -1,5 +1,4 @@
-
-import { Kafka } from 'kafkajs';
+import { Kafka , Partitioners} from 'kafkajs';
 
 // Example charger statuses
 const chargers = {
@@ -13,23 +12,25 @@ const kafka = new Kafka({
   brokers: ['localhost:9092']
 });
 
-
 const producers = {}; // To store active producers
 
 // Function to monitor chargers
 const monitorChargers = () => {
-  setInterval(() => {
-    Object.entries(chargers).forEach(async ([chargerId, status]) => {
-      const newStatus = checkChargerStatus(chargerId);
-      if (newStatus === 'on' && status === 'off') {
-        chargers[chargerId] = 'on';
+  Object.entries(chargers).forEach(async ([chargerId, status]) => {
+    const newStatus = checkChargerStatus(chargerId);
+    if (newStatus !== status) {
+      chargers[chargerId] = newStatus;
+      if (newStatus === 'on') {
         await startKafkaProducer(chargerId);
-      } else if (newStatus === 'off' && status === 'on') {
-        chargers[chargerId] = 'off';
+      } else {
+        await sendKafkaMessage(chargerId);
         await stopKafkaProducer(chargerId);
       }
-    });
-  }, 5000); // Check every 5 seconds
+    }
+  });
+
+  // Set a timeout to run the monitoring again after 5 seconds
+  setTimeout(monitorChargers, 5000);
 };
 
 // Example function to check charger status (mocked for demonstration)
@@ -41,7 +42,7 @@ const checkChargerStatus = (chargerId) => {
 
 // Function to start Kafka producer for charger
 const startKafkaProducer = async (chargerId) => {
-//   const producer = kafka.producer();
+  const producer = kafka.producer();
   await producer.connect();
   console.log(`Kafka producer for ${chargerId} is ready`);
   
@@ -65,9 +66,9 @@ const stopKafkaProducer = async (chargerId) => {
 const sendKafkaMessage = async (chargerId, producer) => {
   const message = {
     charger_id: chargerId,
-    status: 'on',
+    status: chargers[chargerId], // Use current status from chargers object
     timestamp: new Date().toISOString(),
-    power_usage: Math.random() * 10 // Example power usage (random)
+    power_usage: chargers[chargerId] === 'on' ? Math.random() * 10 : 0 // Example power usage (random for 'on', 0 for 'off')
   };
 
   await producer.send({
@@ -75,7 +76,7 @@ const sendKafkaMessage = async (chargerId, producer) => {
     messages: [{ value: JSON.stringify(message) }]
   });
 
-  console.log(`Message sent successfully for ${chargerId}`);
+  console.log(`Message sent successfully for ${chargerId} with status ${message.status}`);
 };
 
 // Start monitoring chargers

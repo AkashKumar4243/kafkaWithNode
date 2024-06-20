@@ -26,9 +26,10 @@ const monitorChargers = () => {
       if (newStatus === 'on' && status === 'off') {
         chargers[chargerId] = 'on';
         await startKafkaProducer(chargerId);
-      } else if (newStatus === 'off' && status === 'on') {
+      } else  {
         chargers[chargerId] = 'off';
-        await stopKafkaProducer(chargerId);
+        await startKafkaProducer(chargerId);
+        // await stopKafkaProducer(chargerId);
       }
     });
   }, 5000); // Check every 5 seconds
@@ -69,7 +70,7 @@ const stopKafkaProducer = async (chargerId) => {
 const sendKafkaMessage = async (chargerId, producer) => {
   const message = {
     charger_id: chargerId,
-    status: 'on',
+    status: chargers[chargerId],
     timestamp: new Date().toISOString(),
     power_usage: Math.random() * 10 // Example power usage (random)
   };
