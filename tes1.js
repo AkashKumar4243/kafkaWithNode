@@ -70,6 +70,7 @@ const stopKafkaProducer = async (chargerId) => {
 const sendKafkaMessage = async (chargerId, producer) => {
   const message = {
     charger_id: chargerId,
+    voltage : "220 Volt" ,
     status: chargers[chargerId],
     timestamp: new Date().toISOString(),
     power_usage: Math.random() * 10 // Example power usage (random)

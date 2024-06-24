@@ -1,0 +1,7 @@
+run tes1.js
+then run tesConsumer.js
+
+UPDATED
+first run tes1.js 
+then run test.js 
+and then run testConsumer.js
