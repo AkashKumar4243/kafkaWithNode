@@ -68,8 +68,6 @@
 // process.on('SIGTERM', shutdown);
 
 
-
-
 //UPDATED VALUE
 
 import { Kafka } from 'kafkajs';

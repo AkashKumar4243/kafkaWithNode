@@ -78,7 +78,7 @@ const start = async () => {
     await runConsumer();
 
     // Set interval to send buffered data every 30 seconds
-    setInterval(sendBufferedData, 30000);
+    setInterval(sendBufferedData, 60000);
   } catch (error) {
     console.error(`Error starting the consumer: ${error.message}`, error);
   }
